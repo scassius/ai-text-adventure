@@ -3,6 +3,9 @@ import './App.css'
 import OpenAI from "openai";
 
 function App() {
+
+  //TODO: Orario, Karma, Vita, Caps, Eventi Casuali, Mappa, Survivng Chance
+
   const [text, setText] = useState("")
   const [imageUrl, setImageUrl] = useState("")
   const [options, setOptions] = useState([] as string[]);
@@ -11,11 +14,22 @@ function App() {
   const [pastInteractions, setPastInteractions] = useState<string[]>([]);
   const [interactionCount, setInteractionCount] = useState(0);
   const [interactions, setInteractions] = useState<{ text: string, imageUrl: string | null }[]>([]);
+  const [openai, setOpenAI] = useState<OpenAI>(null);
+  const [apiKey, setApiKey] = useState<string>(null);
 
-  const openai = new OpenAI({
-    apiKey: '',
-    dangerouslyAllowBrowser: true
-  });
+
+  const requestApiKey = () => {
+    const key = prompt("Please enter your OpenAI API key:");
+    setApiKey(key);
+  };
+
+  const initializeOpenAI = (key) => {
+    const openaiInstance = new OpenAI({
+      apiKey: key,
+      dangerouslyAllowBrowser: true
+    });
+    setOpenAI(openaiInstance);
+  };
 
   const textToSpeech = async (text: string) => {
     const mp3 = await openai.audio.speech.create({
@@ -31,9 +45,9 @@ function App() {
   const extractOptions = (text: string): { updatedText: string, options: string[] } => {
     const lines = text.split('\n');
     let options: string[] = [];
-    
+
     options = lines.filter(line => /^\d+\./.test(line)).map(option => option.replace(/^\d+\.\s*/, ''));
-    
+
     let updatedText = lines.filter(line => !/^\d+\./.test(line)).join('\n');
 
     return { updatedText, options };
@@ -95,15 +109,14 @@ function App() {
   }
 
   const changeImage = async (newImageUrl: string) => {
-    // Applica il blur
     const imageElement = (document.querySelector('.image-container img') as Element);
     imageElement.classList.add('blur');
 
-    // Cambia l'immagine dopo un breve ritardo
+
     setTimeout(() => {
       setImageUrl(newImageUrl);
       imageElement.classList.remove('blur');
-    }, 1000); // Corrisponde alla durata della transizione
+    }, 1000);
   }
 
 
@@ -148,7 +161,7 @@ function App() {
   }
 
   const downloadHTML = async () => {
-    const htmlContent =  await generateHTMLContentBook();
+    const htmlContent = await generateHTMLContentBook();
     const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -194,8 +207,6 @@ function App() {
     <body>
       <h1>Wasteland Chronicles</h1>`;
 
-      console.log(interactions)
-
     interactions.forEach(async (interaction, index) => {
       //const base64Image = interaction.imageUrl ? await convertImageToBase64(interaction.imageUrl) : null;
       htmlContent += `
@@ -210,20 +221,24 @@ function App() {
     return htmlContent;
   }
 
-  const convertImageToBase64 = async (url: string) => {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.readAsDataURL(blob);
-    });
-  }
-
+  useEffect(() => {
+    if (apiKey === null) {
+      requestApiKey();
+    }
+  }, [apiKey]);
 
   useEffect(() => {
-    main("Start Adventure"); // Default prompt when the page loads
-  }, [])
+    if (apiKey) {
+      initializeOpenAI(apiKey);
+    }
+  }, [apiKey]);
+  
+
+  useEffect(() => {
+    if (openai) {
+      main("Start Adventure");
+    }
+  }, [openai]);
 
   return (
     <>
