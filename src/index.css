@@ -1,0 +1,153 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.app-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  color: white;
+  background-size: cover;
+  background-position: center;
+}
+
+.loading-overlay {
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.904);
+  filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 20px;
+}
+
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1ae8;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+
+  a:hover {
+    color: #747bff;
+  }
+
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+.image-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  /* Larghezza dell'intera vista */
+  height: 100vh;
+  /* Altezza dell'intera vista */
+  z-index: -1;
+  /* Posiziona sotto il testo */
+  filter: blur(1px);
+}
+
+.image-container img {
+  width: 100%;
+  /* Riempie la larghezza del contenitore */
+  height: 100%;
+  /* Riempie l'altezza del contenitore */
+  object-fit: cover;
+  /* Assicura che l'immagine copra l'intero contenitore senza distorcere */
+  animation: breathe 10s ease-in-out infinite alternate;
+  transition: filter 1s ease-in-out, transform 1s ease-in-out;
+}
+
+.image-container img.blur {
+  filter: blur(20px);
+}
+
+@keyframes breathe {
+  0% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+.options-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: white;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent background */
+  width: 100%;
+}
+
+.options-overlay p {
+  margin: 0;
+  /* Additional styling as needed */
+}
